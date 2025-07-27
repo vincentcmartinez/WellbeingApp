@@ -1,97 +1,108 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# 🧘‍♀️ Wellbeing App
 
-# Getting Started
+A React Native demo app that helps users take mindful breaks from social media by detecting when they're about to open social media apps and redirecting them to wellness activities instead.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## Features
 
-## Step 1: Start Metro
+- **App Detection**: Monitors for social media app launches (Instagram, X/Twitter, Facebook, TikTok, Snapchat)
+- **Mindful Redirect**: When a social media app is detected, redirects to a wellbeing break screen
+- **Wellness Activities**: Offers various activities like deep breathing, journaling, walking, and reading
+- **Return Option**: Users can choose to return to the original app or stay in the wellbeing app
+- **Dark Mode Support**: Automatically adapts to system dark/light mode
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+## Demo Functionality
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+Since this is a demo app for educational purposes, the app detection is simulated:
 
-```sh
-# Using npm
-npm start
+1. **Launch the app** - You'll see the main screen with information about monitored apps
+2. **Wait 3 seconds** - The app will simulate detecting a social media app launch
+3. **Redirect screen appears** - Shows wellness activities and options to return or stay
+4. **Try activities** - Tap on any activity to see a confirmation message
+5. **Return or stay** - Choose to return to the "detected" app or stay in the wellbeing app
 
-# OR using Yarn
-yarn start
-```
+## Monitored Apps
 
-## Step 2: Build and run your app
+The app monitors these social media applications:
+- Instagram (`com.instagram.android`)
+- X/Twitter (`com.twitter.android`)
+- Facebook (`com.facebook.katana`)
+- TikTok (`com.zhiliaoapp.musically`)
+- Snapchat (`com.snapchat.android`)
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+## Technical Implementation
 
-### Android
+### Architecture
+- **AppDetectionService**: Handles app detection logic and data persistence
+- **RedirectScreen**: Component for the wellbeing break interface
+- **Main App**: Orchestrates the app flow and state management
 
-```sh
-# Using npm
-npm run android
+### Key Technologies
+- React Native 0.80.2
+- TypeScript for type safety
+- AsyncStorage for data persistence
+- React Navigation (ready for future expansion)
 
-# OR using Yarn
-yarn android
-```
+### Real-World Implementation Notes
 
-### iOS
+In a production app, you would need:
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+1. **Android Permissions**: 
+   - `PACKAGE_USAGE_STATS` permission
+   - User must enable "Usage Access" in Settings
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+2. **Usage Stats API**: 
+   - Use Android's `UsageStatsManager` to detect app launches
+   - Monitor foreground app changes
 
-```sh
-bundle install
-```
+3. **Background Service**: 
+   - Implement a foreground service to continuously monitor app usage
+   - Handle app lifecycle events
 
-Then, and every time you update your native dependencies, run:
+4. **Accessibility Service**: 
+   - Alternative approach using accessibility services
+   - Can detect app switches and overlay content
 
-```sh
-bundle exec pod install
-```
+## Getting Started
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+### Prerequisites
+- Node.js >= 18
+- React Native development environment
+- Android Studio (for Android development)
 
-```sh
-# Using npm
-npm run ios
+### Installation
 
-# OR using Yarn
-yarn ios
-```
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+3. For Android:
+   ```bash
+   npx react-native run-android
+   ```
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+### Development
 
-## Step 3: Modify your app
+The app is structured for easy expansion:
 
-Now that you have successfully run the app, let's make changes!
+- Add new social media apps in `AppDetectionService.ts`
+- Create new wellness activities in `RedirectScreen.tsx`
+- Implement real app detection using Android APIs
+- Add user preferences and settings
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+## Educational Use
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+This app demonstrates:
+- React Native app development
+- State management with React hooks
+- Component architecture
+- Service layer patterns
+- User interface design
+- App lifecycle management
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+Perfect for teaching mobile development concepts and digital wellbeing principles.
 
-## Congratulations! :tada:
+## License
 
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+This project is created for educational purposes.

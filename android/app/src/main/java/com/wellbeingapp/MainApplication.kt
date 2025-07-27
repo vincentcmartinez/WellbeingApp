@@ -9,15 +9,28 @@ import com.facebook.react.ReactNativeHost
 import com.facebook.react.ReactPackage
 import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
 import com.facebook.react.defaults.DefaultReactNativeHost
+import com.facebook.react.bridge.ReactApplicationContext
 
 class MainApplication : Application(), ReactApplication {
+
+  companion object {
+    private var reactApplicationContext: ReactApplicationContext? = null
+    
+    fun getReactApplicationContext(): ReactApplicationContext? {
+      return reactApplicationContext
+    }
+    
+    fun setReactApplicationContext(context: ReactApplicationContext?) {
+      reactApplicationContext = context
+    }
+  }
 
   override val reactNativeHost: ReactNativeHost =
       object : DefaultReactNativeHost(this) {
         override fun getPackages(): List<ReactPackage> =
             PackageList(this).packages.apply {
               // Packages that cannot be autolinked yet can be added manually here, for example:
-              // add(MyReactNativePackage())
+              add(AppDetectionPackage())
             }
 
         override fun getJSMainModuleName(): String = "index"
