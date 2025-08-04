@@ -42,8 +42,8 @@ class OverlayActivity : Activity() {
                     Intent.FLAG_ACTIVITY_CLEAR_TOP or 
                     Intent.FLAG_ACTIVITY_SINGLE_TOP or
                     Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED
-            putExtra(EXTRA_APP_NAME, appName)
-            putExtra(EXTRA_PACKAGE_NAME, packageName)
+            putExtra("detected_app_name", appName)
+            putExtra("detected_package_name", packageName)
         }
         
         startActivity(mainIntent)

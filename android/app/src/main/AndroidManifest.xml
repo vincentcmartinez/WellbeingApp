@@ -46,5 +46,11 @@
         android:name=".PersistentOverlayService"
         android:enabled="true"
         android:exported="false" />
+        
+      <service
+        android:name=".IntentionTimerService"
+        android:enabled="true"
+        android:exported="false"
+        android:foregroundServiceType="specialUse" />
     </application>
 </manifest>

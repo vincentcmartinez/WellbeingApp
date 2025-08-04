@@ -30,7 +30,13 @@ class AppDetectionService : Service() {
             "com.twitter.android", 
             "com.facebook.katana",
             "com.zhiliaoapp.musically",
-            "com.snapchat.android"
+            "com.snapchat.android",
+            "com.google.android.youtube",
+            // Add some common apps for testing on emulators
+            "com.android.chrome",
+            "com.google.android.gm", // Gmail
+            "com.android.calculator2", // Calculator for easy testing
+            "com.android.settings" // Settings - guaranteed to have launcher activity
         )
     }
     
@@ -39,6 +45,8 @@ class AppDetectionService : Service() {
     private lateinit var usageStatsManager: UsageStatsManager
     private var lastDetectedApp: String? = null
     private var lastDetectionTime: Long = 0
+    private var activeIntentionApps: MutableSet<String> = mutableSetOf()
+    private var gracePeriodApps: MutableMap<String, Long> = mutableMapOf() // package name -> end time
     
     override fun onCreate() {
         super.onCreate()
@@ -54,7 +62,29 @@ class AppDetectionService : Service() {
     }
     
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.d(TAG, "AppDetectionService started")
+        Log.d(TAG, "AppDetectionService started with action: ${intent?.action}")
+        
+        when (intent?.action) {
+            "ADD_ACTIVE_INTENTION_APP" -> {
+                val packageName = intent.getStringExtra("package_name")
+                if (packageName != null) {
+                    addActiveIntentionApp(packageName)
+                }
+            }
+            "REMOVE_ACTIVE_INTENTION_APP" -> {
+                val packageName = intent.getStringExtra("package_name")
+                if (packageName != null) {
+                    removeActiveIntentionApp(packageName)
+                }
+            }
+            "ADD_GRACE_PERIOD_APP" -> {
+                val packageName = intent.getStringExtra("package_name")
+                if (packageName != null) {
+                    addGracePeriodApp(packageName)
+                }
+            }
+        }
+        
         return START_STICKY
     }
     
@@ -100,32 +130,77 @@ class AppDetectionService : Service() {
         val currentTime = System.currentTimeMillis()
         val startTime = currentTime - 5000 // Check last 5 seconds
         
-        val usageEvents = usageStatsManager.queryEvents(startTime, currentTime)
-        val event = UsageEvents.Event()
-        
-        while (usageEvents.hasNextEvent()) {
-            usageEvents.getNextEvent(event)
+        try {
+            val usageEvents = usageStatsManager.queryEvents(startTime, currentTime)
+            val event = UsageEvents.Event()
             
-            if (event.eventType == UsageEvents.Event.MOVE_TO_FOREGROUND) {
-                val packageName = event.packageName
+            var eventCount = 0
+            while (usageEvents.hasNextEvent()) {
+                usageEvents.getNextEvent(event)
+                eventCount++
                 
-                if (SOCIAL_MEDIA_APPS.contains(packageName)) {
-                    // Prevent multiple detections of the same app in a short time
-                    if (lastDetectedApp != packageName || currentTime - lastDetectionTime > 10000) {
-                        Log.d(TAG, "Social media app detected: $packageName")
-                        lastDetectedApp = packageName
-                        lastDetectionTime = currentTime
+                if (event.eventType == UsageEvents.Event.MOVE_TO_FOREGROUND) {
+                    val packageName = event.packageName
+                    Log.v(TAG, "App moved to foreground: $packageName")
+                    
+                    if (SOCIAL_MEDIA_APPS.contains(packageName)) {
+                        Log.d(TAG, "Found social media app: $packageName")
                         
-                        // Send event to React Native first
-                        sendAppDetectionEvent(packageName, getAppDisplayName(packageName))
+                        // Check if this app is currently in an active intention session
+                        if (activeIntentionApps.contains(packageName)) {
+                            Log.d(TAG, "Ignoring $packageName - currently in active intention session")
+                            return
+                        }
                         
-                                                // Then bring wellbeing app to foreground after a short delay
-                        Handler(Looper.getMainLooper()).postDelayed({
-                            bringWellbeingAppToForeground(packageName, getAppDisplayName(packageName))
-                        }, 500) // 500ms delay
+                        // Check if this app is in grace period (just launched back to)
+                        val gracePeriodEndTime = gracePeriodApps[packageName]
+                        if (gracePeriodEndTime != null && currentTime < gracePeriodEndTime) {
+                            val remainingTime = (gracePeriodEndTime - currentTime) / 1000
+                            Log.d(TAG, "Ignoring $packageName - in grace period (${remainingTime}s remaining)")
+                            return
+                        } else if (gracePeriodEndTime != null) {
+                            // Grace period expired, remove from map
+                            gracePeriodApps.remove(packageName)
+                            Log.d(TAG, "Grace period expired for $packageName")
+                        }
+                        
+                        // Prevent multiple detections of the same app in a short time
+                        if (lastDetectedApp != packageName || currentTime - lastDetectionTime > 10000) {
+                            Log.i(TAG, "🚨 Social media app detected: $packageName")
+                            lastDetectedApp = packageName
+                            lastDetectionTime = currentTime
+                            
+                            // Send event to React Native first
+                            sendAppDetectionEvent(packageName, getAppDisplayName(packageName))
+                            
+                            // Then bring wellbeing app to foreground after a short delay
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                bringWellbeingAppToForeground(packageName, getAppDisplayName(packageName))
+                            }, 500) // 500ms delay
+                        } else {
+                            Log.d(TAG, "Recent detection for $packageName, skipping (last: ${currentTime - lastDetectionTime}ms ago)")
+                        }
+                    } else {
+                        // Log Instagram specifically for debugging
+                        if (packageName == "com.instagram.android") {
+                            Log.w(TAG, "⚠️ Instagram detected but NOT in tracked list!")
+                        }
+                        // Log other social apps for debugging
+                        if (packageName.contains("instagram") || packageName.contains("facebook") || packageName.contains("twitter")) {
+                            Log.d(TAG, "Non-tracked social app detected: $packageName")
+                        }
                     }
                 }
             }
+            
+            if (eventCount == 0) {
+                Log.v(TAG, "No usage events in last 5 seconds")
+            } else {
+                Log.v(TAG, "Processed $eventCount usage events")
+            }
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Error checking for social media apps", e)
         }
     }
     
@@ -261,6 +336,7 @@ class AppDetectionService : Service() {
             "com.facebook.katana" -> "Facebook"
             "com.zhiliaoapp.musically" -> "TikTok"
             "com.snapchat.android" -> "Snapchat"
+            "com.google.android.youtube" -> "YouTube"
             else -> packageName
         }
     }
@@ -277,6 +353,23 @@ class AppDetectionService : Service() {
         } catch (e: Exception) {
             Log.e(TAG, "Error sending app detection event", e)
         }
+    }
+    
+    fun addActiveIntentionApp(packageName: String) {
+        activeIntentionApps.add(packageName)
+        Log.d(TAG, "Added $packageName to active intention apps: $activeIntentionApps")
+    }
+    
+    fun removeActiveIntentionApp(packageName: String) {
+        activeIntentionApps.remove(packageName)
+        Log.d(TAG, "Removed $packageName from active intention apps: $activeIntentionApps")
+    }
+    
+    fun addGracePeriodApp(packageName: String) {
+        val gracePeriodDuration = 45000L // 45 seconds grace period
+        val endTime = System.currentTimeMillis() + gracePeriodDuration
+        gracePeriodApps[packageName] = endTime
+        Log.d(TAG, "🛡️ Added $packageName to grace period (45 seconds)")
     }
     
     override fun onDestroy() {

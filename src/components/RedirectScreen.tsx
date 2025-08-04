@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -8,44 +8,120 @@ import {
   useColorScheme,
 } from 'react-native';
 import { AppInfo } from '../services/AppDetectionService';
+import { BreathingExerciseScreen } from './BreathingExerciseScreen';
+import { MoodTrackingScreen } from './MoodTrackingScreen';
+import { SimplifyScreen } from './SimplifyScreen';
+import { IntentionScreen } from './IntentionScreen';
+import StatisticsService from '../services/StatisticsService';
 
 interface RedirectScreenProps {
   redirectedFrom: AppInfo;
+  currentSessionId: string | null;
   onReturnToApp: () => void;
   onStayHere: () => void;
 }
 
 export const RedirectScreen: React.FC<RedirectScreenProps> = ({
   redirectedFrom,
+  currentSessionId,
   onReturnToApp,
   onStayHere,
 }) => {
   const isDarkMode = useColorScheme() === 'dark';
+  const [showBreathingExercise, setShowBreathingExercise] = useState(false);
+  const [showMoodTracking, setShowMoodTracking] = useState(false);
+  const [showSimplify, setShowSimplify] = useState(false);
+  const [showIntention, setShowIntention] = useState(false);
 
   const handleReturnToApp = () => {
-    Alert.alert(
-      'Return to App',
-      `Returning to ${redirectedFrom.appName}...`,
-      [
-        {
-          text: 'OK',
-          onPress: onReturnToApp,
-        },
-      ]
-    );
+    // Directly call the parent's return function
+    onReturnToApp();
   };
 
-  const handleActivityPress = (activityName: string) => {
-    Alert.alert(
-      'Activity Selected',
-      `Great choice! ${activityName} is a wonderful way to take care of yourself.`,
-      [
-        {
-          text: 'Continue',
-        },
-      ]
-    );
+  const handleActivityPress = async (activityName: string) => {
+    // Track activity choice for statistics
+    if (currentSessionId) {
+      let activityKey: 'breathing' | 'moodTracking' | 'simplify' | 'setIntention' | undefined;
+      
+      if (activityName === 'Deep Breathing') {
+        activityKey = 'breathing';
+      } else if (activityName === 'Tracking your mood') {
+        activityKey = 'moodTracking';
+      } else if (activityName === 'Simplify') {
+        activityKey = 'simplify';
+      } else if (activityName === 'Set Intention') {
+        activityKey = 'setIntention';
+      }
+      
+      if (activityKey) {
+        try {
+          await StatisticsService.trackActivityChoice(currentSessionId, activityKey);
+          console.log(`📊 Tracked activity choice: ${activityKey}`);
+        } catch (error) {
+          console.error('Error tracking activity choice:', error);
+        }
+      }
+    }
+
+    // Navigate to the chosen activity
+    if (activityName === 'Deep Breathing') {
+      setShowBreathingExercise(true);
+    } else if (activityName === 'Tracking your mood') {
+      setShowMoodTracking(true);
+    } else if (activityName === 'Simplify') {
+      setShowSimplify(true);
+    } else if (activityName === 'Set Intention') {
+      setShowIntention(true);
+    } else {
+      Alert.alert(
+        'Activity Selected',
+        `Great choice! ${activityName} is a wonderful way to take care of yourself.`,
+        [
+          {
+            text: 'Continue',
+          },
+        ]
+      );
+    }
   };
+
+  if (showBreathingExercise) {
+    return (
+      <BreathingExerciseScreen
+        onBack={() => setShowBreathingExercise(false)}
+      />
+    );
+  }
+
+  if (showMoodTracking) {
+    return (
+      <MoodTrackingScreen
+        onBack={() => setShowMoodTracking(false)}
+        interruptedApp={redirectedFrom.appName}
+      />
+    );
+  }
+
+  if (showSimplify) {
+    return (
+      <SimplifyScreen
+        onBack={() => setShowSimplify(false)}
+      />
+    );
+  }
+
+  if (showIntention) {
+    return (
+      <IntentionScreen
+        onBack={() => setShowIntention(false)}
+        currentSessionId={currentSessionId}
+        interruptedApp={{
+          packageName: redirectedFrom.packageName,
+          appName: redirectedFrom.appName,
+        }}
+      />
+    );
+  }
 
   return (
     <View style={[styles.container, isDarkMode && styles.darkContainer]}>
@@ -76,7 +152,7 @@ export const RedirectScreen: React.FC<RedirectScreenProps> = ({
           
           <TouchableOpacity 
             style={styles.activityButton}
-            onPress={() => handleActivityPress('Setting Intentions')}
+            onPress={() => handleActivityPress('Set Intention')}
           >
             <Text style={styles.activityText}>Set Intention</Text>
             <Text style={styles.activityDescription}>
@@ -96,11 +172,11 @@ export const RedirectScreen: React.FC<RedirectScreenProps> = ({
           
           <TouchableOpacity 
             style={styles.activityButton}
-            onPress={() => handleActivityPress('Getting outside')}
+            onPress={() => handleActivityPress('Simplify')}
           >
-            <Text style={styles.activityText}>Take a Walk</Text>
+            <Text style={styles.activityText}>Simplify</Text>
             <Text style={styles.activityDescription}>
-              get some fresh air and movement
+              review and declutter your social media apps
             </Text>
           </TouchableOpacity>
         </View>
