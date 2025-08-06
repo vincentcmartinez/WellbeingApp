@@ -561,7 +561,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     paddingTop: 40,
+    backgroundColor: '#9ac790',
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
   },
+
   backButton: {
     padding: 10,
   },
@@ -577,7 +581,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginLeft: 20,
-    color: '#333333',
+    color: '#FFFFFF',
   },
   content: {
     flex: 1,
@@ -624,11 +628,12 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: '#e0e0e0',
+    backgroundColor: '#f0f9e6',
     alignItems: 'center',
     marginBottom: 10,
   },
   selectedTimeOption: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#9ac790',
     borderColor: '#4CAF50',
   },
   timeOptionText: {
@@ -646,14 +651,14 @@ const styles = StyleSheet.create({
     padding: 15,
     fontSize: 16,
     minHeight: 100,
-    backgroundColor: '#fafafa',
+    backgroundColor: '#f0f9e6',
   },
   darkIntentionInput: {
     backgroundColor: '#ffffff',
     borderColor: '#d0d0d0',
   },
   startButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#9ac790',
     paddingVertical: 16,
     paddingHorizontal: 24,
     borderRadius: 8,
@@ -705,7 +710,7 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
   stopButton: {
-    backgroundColor: '#FF5722',
+    backgroundColor: 'gray',
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 6,
@@ -716,7 +721,7 @@ const styles = StyleSheet.create({
      fontWeight: '600',
    },
    oldGoBackButton: {
-     backgroundColor: '#2196F3',
+     backgroundColor: '#9ac790',
      paddingVertical: 12,
      paddingHorizontal: 20,
      borderRadius: 6,
@@ -803,7 +808,7 @@ const styles = StyleSheet.create({
      backgroundColor: '#FF5722',
    },
    yesButton: {
-     backgroundColor: '#4CAF50',
+     backgroundColor: '#9ac790',
    },
    fulfillmentButtonText: {
      color: 'white',
@@ -831,7 +836,7 @@ const styles = StyleSheet.create({
      padding: 12,
      fontSize: 16,
      minHeight: 80,
-     backgroundColor: '#fafafa',
+     backgroundColor: '#f0f9e6',
      textAlignVertical: 'top',
    },
    darkReflectionInput: {

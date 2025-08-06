@@ -291,6 +291,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     paddingTop: 40,
+    backgroundColor: '#7dc0c0',
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
   },
   backButton: {
     padding: 10,
@@ -307,7 +310,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginLeft: 20,
-    color: '#333333',
+    color: '#FFFFFF',
   },
   content: {
     flex: 1,
@@ -336,7 +339,7 @@ const styles = StyleSheet.create({
     color: '#666666',
   },
   statsContainer: {
-    backgroundColor: '#f0f8ff',
+    backgroundColor: '#e4f6f6',
     padding: 15,
     borderRadius: 10,
     marginBottom: 20,
@@ -354,7 +357,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   recommendationSection: {
-    backgroundColor: '#e8f5e8',
+    backgroundColor: '#e4f6f6',
     padding: 15,
     borderRadius: 10,
     marginBottom: 30,

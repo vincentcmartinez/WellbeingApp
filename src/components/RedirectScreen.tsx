@@ -126,10 +126,10 @@ export const RedirectScreen: React.FC<RedirectScreenProps> = ({
   return (
     <View style={[styles.container, isDarkMode && styles.darkContainer]}>
       <View style={styles.content}>
-        <Text style={[styles.title, isDarkMode && styles.darkText]}>
-          Wellbeing Break
-        </Text>
-        
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>Wellbeing Break</Text>
+        </View>
+
         <Text style={[styles.message, isDarkMode && styles.darkText]}>
           We noticed you were about to open{' '}
           <Text style={styles.highlight}>{redirectedFrom.appName}</Text>.
@@ -139,42 +139,42 @@ export const RedirectScreen: React.FC<RedirectScreenProps> = ({
           Take a moment for yourself instead:
         </Text>
 
-        <View style={styles.activitiesContainer}>
+        <View style={styles.cardGrid}>
           <TouchableOpacity 
-            style={styles.activityButton}
+            style={[styles.card, { backgroundColor: '#e6e6fa' }]}
             onPress={() => handleActivityPress('Deep Breathing')}
           >
-            <Text style={styles.activityText}>Deep Breathing</Text>
+            <Text style={styles.cardText}>Deep Breathing</Text>
             <Text style={styles.activityDescription}>
               Take 3 deep breaths to center yourself
             </Text>
           </TouchableOpacity>
           
           <TouchableOpacity 
-            style={styles.activityButton}
+            style={[styles.card, { backgroundColor: '#f0f9e6' }]}
             onPress={() => handleActivityPress('Set Intention')}
           >
-            <Text style={styles.activityText}>Set Intention</Text>
+            <Text style={styles.cardText}>Set Intention</Text>
             <Text style={styles.activityDescription}>
               set a maximum time for this app, and write down your intentions with this time.
             </Text>
           </TouchableOpacity>
           
           <TouchableOpacity 
-            style={styles.activityButton}
+            style={[styles.card, { backgroundColor: '#f4ece4' }]}
             onPress={() => handleActivityPress('Tracking your mood')}
           >
-            <Text style={styles.activityText}>Track Mood</Text>
+            <Text style={styles.cardText}>Track Mood</Text>
             <Text style={styles.activityDescription}>
               Understand your mood and how it changes over time
             </Text>
           </TouchableOpacity>
           
           <TouchableOpacity 
-            style={styles.activityButton}
+            style={[styles.card, { backgroundColor: '#e4f6f6' }]}
             onPress={() => handleActivityPress('Simplify')}
           >
-            <Text style={styles.activityText}>Simplify</Text>
+            <Text style={styles.cardText}>Simplify</Text>
             <Text style={styles.activityDescription}>
               review and declutter your social media apps
             </Text>
@@ -217,6 +217,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
   },
+  header: {
+    width: '100%',
+    backgroundColor: '#aab6f3',
+    paddingTop: 40,
+    paddingBottom: 30,
+    paddingHorizontal: 20,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+    alignItems: 'flex-start',
+    marginBottom: 20,
+  },
+  headerTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+
   title: {
     fontSize: 32,
     fontWeight: 'bold',
@@ -236,7 +253,7 @@ const styles = StyleSheet.create({
   },
   highlight: {
     fontWeight: 'bold',
-    color: '#666666',
+    color: '#666',
   },
   subtitle: {
     fontSize: 16,
@@ -244,33 +261,37 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     color: '#888',
   },
-  activitiesContainer: {
-    width: '100%',
-    marginBottom: 40,
-  },
-  activityButton: {
-    backgroundColor: '#999999',
-    padding: 20,
-    borderRadius: 15,
-    marginBottom: 15,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  activityText: {
-    color: 'white',
-    fontSize: 18,
+cardGrid: {
+  flex: 1,
+  flexDirection: 'row',
+  flexWrap: 'wrap',
+  justifyContent: 'space-between',
+  paddingHorizontal: 1,
+  paddingTop: 1,
+  gap: 1,
+},
+
+card: {
+  width: '100%',
+  aspectRatio: 2,
+  borderRadius: 20,
+  marginBottom: 10,
+  justifyContent: 'center',
+  alignItems: 'center',
+  elevation: 3,
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 1 },
+  shadowOpacity: 0.1,
+  shadowRadius: 2,
+},
+  cardText: {
+    fontSize: 16,
     fontWeight: '600',
-    marginBottom: 5,
+    color: '#333',
   },
+
   activityDescription: {
-    color: 'rgba(255, 255, 255, 0.8)',
+    color: '#555',
     fontSize: 14,
     textAlign: 'center',
   },
@@ -292,14 +313,14 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   returnButton: {
-    backgroundColor: '#666666',
+    backgroundColor: '#e0e0e0', // light gray
   },
   stayButton: {
-    backgroundColor: '#999999',
+    backgroundColor: '#aab6f3', // soft purple (like HomeScreen header)
   },
   buttonText: {
-    color: 'white',
+    color: '#333',
     fontSize: 16,
     fontWeight: '600',
   },
-}); 
+});

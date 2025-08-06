@@ -246,6 +246,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     paddingTop: 40,
+    backgroundColor: '#e6a15d',
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
   },
   backButton: {
     padding: 10,
@@ -262,14 +265,14 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginLeft: 20,
-    color: '#333333',
+    color: '#FFFFFF',
   },
   content: {
     flex: 1,
     padding: 20,
   },
   interruptedAppContainer: {
-    backgroundColor: '#f0f8ff',
+    backgroundColor: '#f4ece4',
     padding: 15,
     borderRadius: 10,
     marginBottom: 20,
@@ -309,7 +312,7 @@ const styles = StyleSheet.create({
   },
   selectedMoodOption: {
     backgroundColor: '#f0f8ff',
-    borderWidth: 3,
+    borderWidth: 4,
   },
   moodEmoji: {
     fontSize: 32,
@@ -329,7 +332,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 15,
     fontSize: 16,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#f4ece4',
     color: '#333333',
     minHeight: 100,
   },
@@ -338,7 +341,7 @@ const styles = StyleSheet.create({
     borderColor: '#d0d0d0',
   },
   saveButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#e6a15d',
     paddingVertical: 15,
     paddingHorizontal: 30,
     borderRadius: 10,
@@ -354,7 +357,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   entryCard: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#f4ece4',
     padding: 15,
     borderRadius: 10,
     marginBottom: 10,
