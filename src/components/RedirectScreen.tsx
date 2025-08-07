@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Alert,
   useColorScheme,
+  Image,
 } from 'react-native';
 import { AppInfo } from '../services/AppDetectionService';
 import { BreathingExerciseScreen } from './BreathingExerciseScreen';
@@ -144,40 +145,32 @@ export const RedirectScreen: React.FC<RedirectScreenProps> = ({
             style={[styles.card, { backgroundColor: '#e6e6fa' }]}
             onPress={() => handleActivityPress('Deep Breathing')}
           >
+            <Image source={require('../../images/Meditation.png')} style={styles.cardIcon} />
             <Text style={styles.cardText}>Deep Breathing</Text>
-            <Text style={styles.activityDescription}>
-              Take 3 deep breaths to center yourself
-            </Text>
           </TouchableOpacity>
           
           <TouchableOpacity 
             style={[styles.card, { backgroundColor: '#f0f9e6' }]}
             onPress={() => handleActivityPress('Set Intention')}
           >
+            <Image source={require('../../images/BusinessTime.png')} style={styles.cardIcon} />
             <Text style={styles.cardText}>Set Intention</Text>
-            <Text style={styles.activityDescription}>
-              set a maximum time for this app, and write down your intentions with this time.
-            </Text>
           </TouchableOpacity>
           
           <TouchableOpacity 
             style={[styles.card, { backgroundColor: '#f4ece4' }]}
             onPress={() => handleActivityPress('Tracking your mood')}
           >
+            <Image source={require('../../images/Journal.png')} style={styles.cardIcon} />
             <Text style={styles.cardText}>Track Mood</Text>
-            <Text style={styles.activityDescription}>
-              Understand your mood and how it changes over time
-            </Text>
           </TouchableOpacity>
           
           <TouchableOpacity 
             style={[styles.card, { backgroundColor: '#e4f6f6' }]}
             onPress={() => handleActivityPress('Simplify')}
           >
+            <Image source={require('../../images/Trash.png')} style={styles.cardIcon} />
             <Text style={styles.cardText}>Simplify</Text>
-            <Text style={styles.activityDescription}>
-              review and declutter your social media apps
-            </Text>
           </TouchableOpacity>
         </View>
 
@@ -220,16 +213,16 @@ const styles = StyleSheet.create({
   header: {
     width: '100%',
     backgroundColor: '#aab6f3',
-    paddingTop: 40,
-    paddingBottom: 30,
+    paddingTop: 30,
+    paddingBottom: 20,
     paddingHorizontal: 20,
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
     alignItems: 'flex-start',
-    marginBottom: 20,
+    marginBottom: 15,
   },
   headerTitle: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: 'bold',
     color: 'white',
   },
@@ -258,7 +251,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 16,
     textAlign: 'center',
-    marginBottom: 30,
+    marginBottom: 20,
     color: '#888',
   },
 cardGrid: {
@@ -273,9 +266,9 @@ cardGrid: {
 
 card: {
   width: '100%',
-  aspectRatio: 2,
+  aspectRatio: 3,
   borderRadius: 20,
-  marginBottom: 10,
+  marginBottom: 8,
   justifyContent: 'center',
   alignItems: 'center',
   elevation: 3,
@@ -284,6 +277,12 @@ card: {
   shadowOpacity: 0.1,
   shadowRadius: 2,
 },
+  cardIcon: {
+    width: 32,
+    height: 32,
+    marginBottom: 6,
+    resizeMode: 'contain',
+  },
   cardText: {
     fontSize: 16,
     fontWeight: '600',

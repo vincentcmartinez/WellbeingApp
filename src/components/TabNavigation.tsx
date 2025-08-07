@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, useColorScheme } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, useColorScheme, Image } from 'react-native';
 
 interface TabNavigationProps {
   activeTab: string;
@@ -19,12 +19,11 @@ export const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabPr
         ]}
         onPress={() => onTabPress('home')}
       >
-        <Text style={[styles.tabIcon, { color: activeTab === 'home' ? '#999999' : '#cccccc' }]}>
-          🏠
-        </Text>
-        <Text style={[styles.tabLabel, { color: activeTab === 'home' ? '#999999' : '#cccccc' }]}>
-          Home
-        </Text>
+        <Image 
+          source={require('../../images/Home.png')} 
+          style={[styles.tabIcon, { tintColor: activeTab === 'home' ? '#007AFF' : '#CCCCCC' }]} 
+        />
+        {activeTab === 'home' && <View style={styles.activeIndicator} />}
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -35,12 +34,26 @@ export const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabPr
         ]}
         onPress={() => onTabPress('metrics')}
       >
-        <Text style={[styles.tabIcon, { color: activeTab === 'metrics' ? '#999999' : '#cccccc' }]}>
-          📊
-        </Text>
-        <Text style={[styles.tabLabel, { color: activeTab === 'metrics' ? '#999999' : '#cccccc' }]}>
-          Metrics
-        </Text>
+        <Image 
+          source={require('../../images/PositiveDynamic.png')} 
+          style={[styles.tabIcon, { tintColor: activeTab === 'metrics' ? '#007AFF' : '#CCCCCC' }]} 
+        />
+        {activeTab === 'metrics' && <View style={styles.activeIndicator} />}
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={[
+          styles.tab,
+          activeTab === 'settings' && styles.activeTab,
+          { borderTopColor: isDarkMode ? '#e0e0e0' : '#e0e0e0' }
+        ]}
+        onPress={() => onTabPress('settings')}
+      >
+        <Image 
+          source={require('../../images/Settings.png')} 
+          style={[styles.tabIcon, { tintColor: activeTab === 'settings' ? '#007AFF' : '#CCCCCC' }]} 
+        />
+        {activeTab === 'settings' && <View style={styles.activeIndicator} />}
       </TouchableOpacity>
     </View>
   );
@@ -58,16 +71,22 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    position: 'relative',
   },
   activeTab: {
     // Active tab styling
   },
   tabIcon: {
-    fontSize: 20,
+    width: 24,
+    height: 24,
     marginBottom: 4,
   },
-  tabLabel: {
-    fontSize: 12,
-    fontWeight: '500',
+  activeIndicator: {
+    position: 'absolute',
+    bottom: 0,
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#007AFF',
   },
 }); 

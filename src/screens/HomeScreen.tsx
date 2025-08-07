@@ -8,6 +8,7 @@ import {
   Text,
   TouchableOpacity,
   Switch,
+  Image,
 } from 'react-native';
 import { AppDetectionService, AppInfo } from '../services/AppDetectionService';
 import { RedirectScreen } from '../components/RedirectScreen';
@@ -26,6 +27,7 @@ interface HomeScreenProps {
   onStopMonitoring: () => Promise<void>;
   onRequestPermissions: () => Promise<void>;
   onCheckPermissions: () => Promise<void>;
+  onNavigateToActivity: (activity: string) => void;
 }
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({
@@ -38,6 +40,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   onStopMonitoring,
   onRequestPermissions,
   onCheckPermissions,
+  onNavigateToActivity,
 }) => {
   const isDarkMode = useColorScheme() === 'dark';
   const [redirectedFrom, setRedirectedFrom] = useState<AppInfo | null>(null);
@@ -63,6 +66,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
     setShowRedirectScreen(false);
     setRedirectedFrom(null);
     await AppDetectionService.clearRedirectedApp();
+  };
+
+  const handleActivityPress = (activity: string) => {
+    onNavigateToActivity(activity);
   };
 
   if (showRedirectScreen && redirectedFrom) {
@@ -144,16 +151,32 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
       {/* 2x2 Card Grid */}
       <View style={styles.cardGrid}>
-        <TouchableOpacity style={[styles.card, { backgroundColor: '#e6e6fa' }]}>
-          <Text style={styles.cardText}>Meditate</Text>
+        <TouchableOpacity 
+          style={[styles.card, { backgroundColor: '#e6e6fa' }]}
+          onPress={() => handleActivityPress('Deep Breathing')}
+        >
+          <Image source={require('../../images/Meditation.png')} style={styles.cardIcon} />
+          <Text style={styles.cardText}>Deep Breathing</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.card, { backgroundColor: '#f0f9e6' }]}>
-          <Text style={styles.cardText}>Focus</Text>
+        <TouchableOpacity 
+          style={[styles.card, { backgroundColor: '#f0f9e6' }]}
+          onPress={() => handleActivityPress('Set Intention')}
+        >
+          <Image source={require('../../images/BusinessTime.png')} style={styles.cardIcon} />
+          <Text style={styles.cardText}>Set Intention</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.card, { backgroundColor: '#f4ece4' }]}>
-          <Text style={styles.cardText}>Reflect</Text>
+        <TouchableOpacity 
+          style={[styles.card, { backgroundColor: '#f4ece4' }]}
+          onPress={() => handleActivityPress('Tracking your mood')}
+        >
+          <Image source={require('../../images/Journal.png')} style={styles.cardIcon} />
+          <Text style={styles.cardText}>Track Mood</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.card, { backgroundColor: '#e4f6f6' }]}>
+        <TouchableOpacity 
+          style={[styles.card, { backgroundColor: '#e4f6f6' }]}
+          onPress={() => handleActivityPress('Simplify')}
+        >
+          <Image source={require('../../images/Trash.png')} style={styles.cardIcon} />
           <Text style={styles.cardText}>Simplify</Text>
         </TouchableOpacity>
       </View>
@@ -273,6 +296,12 @@ card: {
   shadowOpacity: 0.1,
   shadowRadius: 2,
 },
+  cardIcon: {
+    width: 32,
+    height: 32,
+    marginBottom: 6,
+    resizeMode: 'contain',
+  },
   cardText: {
     fontSize: 16,
     fontWeight: '600',

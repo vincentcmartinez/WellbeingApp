@@ -9,8 +9,13 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, useColorScheme, Alert, NativeEventEmitter, NativeModules, AppState } from 'react-native';
 import { HomeScreen } from './src/screens/HomeScreen';
 import { MetricsScreen } from './src/screens/MetricsScreen';
+import { SettingsScreen } from './src/screens/SettingsScreen';
 import { RedirectScreen } from './src/components/RedirectScreen';
 import { TabNavigation } from './src/components/TabNavigation';
+import { BreathingExerciseScreen } from './src/components/BreathingExerciseScreen';
+import { IntentionScreen } from './src/components/IntentionScreen';
+import { MoodTrackingScreen } from './src/components/MoodTrackingScreen';
+import { SimplifyScreen } from './src/components/SimplifyScreen';
 import { AppDetectionService, AppInfo } from './src/services/AppDetectionService';
 
 const { AppDetectionModule, IntentionTimerModule } = NativeModules;
@@ -20,6 +25,7 @@ function App() {
   const [redirectedFrom, setRedirectedFrom] = useState<AppInfo | null>(null);
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('home');
+  const [currentActivity, setCurrentActivity] = useState<string | null>(null);
   const [showRedirectScreen, setShowRedirectScreen] = useState(false);
   const [hasPermission, setHasPermission] = useState(false);
   const [hasOverlayPermission, setHasOverlayPermission] = useState(false);
@@ -287,6 +293,11 @@ function App() {
 
   const handleTabPress = (tabName: string) => {
     setActiveTab(tabName);
+    setCurrentActivity(null); // Clear activity when switching tabs
+  };
+
+  const handleNavigateToActivity = (activity: string) => {
+    setCurrentActivity(activity);
   };
 
   if (showRedirectScreen && redirectedFrom) {
@@ -302,7 +313,7 @@ function App() {
 
   return (
     <View style={[styles.container, { backgroundColor: isDarkMode ? '#000' : '#fff' }]}>
-      {activeTab === 'home' ? (
+      {activeTab === 'home' && !currentActivity && (
         <HomeScreen 
           hasPermission={hasPermission}
           hasOverlayPermission={hasOverlayPermission}
@@ -313,10 +324,27 @@ function App() {
           onStopMonitoring={stopAppDetection}
           onRequestPermissions={requestAllPermissions}
           onCheckPermissions={checkAllPermissions}
+          onNavigateToActivity={handleNavigateToActivity}
         />
-      ) : (
-        <MetricsScreen />
       )}
+      {activeTab === 'home' && currentActivity === 'Deep Breathing' && (
+        <BreathingExerciseScreen onBack={() => setCurrentActivity(null)} />
+      )}
+      {activeTab === 'home' && currentActivity === 'Set Intention' && (
+        <IntentionScreen 
+          onBack={() => setCurrentActivity(null)}
+          interruptedApp={{ packageName: '', appName: 'Focus Session' }}
+          currentSessionId={currentSessionId}
+        />
+      )}
+      {activeTab === 'home' && currentActivity === 'Tracking your mood' && (
+        <MoodTrackingScreen onBack={() => setCurrentActivity(null)} />
+      )}
+      {activeTab === 'home' && currentActivity === 'Simplify' && (
+        <SimplifyScreen onBack={() => setCurrentActivity(null)} />
+      )}
+      {activeTab === 'metrics' && <MetricsScreen />}
+      {activeTab === 'settings' && <SettingsScreen />}
       <TabNavigation activeTab={activeTab} onTabPress={handleTabPress} />
     </View>
   );
@@ -325,9 +353,6 @@ function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
   },
 });
 
