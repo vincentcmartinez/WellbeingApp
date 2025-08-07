@@ -461,10 +461,17 @@ export const IntentionScreen: React.FC<IntentionScreenProps> = ({
               showsVerticalScrollIndicator={false}
               contentContainerStyle={styles.modalScrollContent}
             >
-              <Text style={[styles.modalTitle, isDarkMode && styles.darkText]}>
-                ⏰ Time's Up!
-              </Text>
+              {/* Header Section */}
+              <View style={styles.modalHeader}>
+                <Text style={[styles.modalTitle, isDarkMode && styles.darkText]}>
+                  ⏰ Session Complete
+                </Text>
+                <Text style={[styles.modalSubtitle, isDarkMode && styles.darkText]}>
+                  Your mindful session has ended
+                </Text>
+              </View>
 
+              {/* Intention Reminder Card */}
               <View style={styles.intentionReminder}>
                 <Text style={[styles.intentionReminderLabel, isDarkMode && styles.darkText]}>
                   Your intention was:
@@ -474,26 +481,48 @@ export const IntentionScreen: React.FC<IntentionScreenProps> = ({
                 </Text>
               </View>
 
-              <Text style={[styles.questionText, isDarkMode && styles.darkText]}>
-                Did you fulfill your intention?
-              </Text>
-
-              <View style={styles.fulfillmentButtons}>
-                <TouchableOpacity
-                  style={[styles.fulfillmentButton, styles.noButton]}
-                  onPress={() => handleFulfillmentAnswer(false)}
-                >
-                  <Text style={styles.fulfillmentButtonText}>No, I didn't</Text>
-                </TouchableOpacity>
+              {/* Fulfillment Question */}
+              <View style={styles.fulfillmentSection}>
+                <Text style={[styles.questionText, isDarkMode && styles.darkText]}>
+                  Did you fulfill your intention?
+                </Text>
                 
-                <TouchableOpacity
-                  style={[styles.fulfillmentButton, styles.yesButton]}
-                  onPress={() => handleFulfillmentAnswer(true)}
-                >
-                  <Text style={styles.fulfillmentButtonText}>Yes, I did!</Text>
-                </TouchableOpacity>
+                <View style={styles.fulfillmentButtons}>
+                  <TouchableOpacity
+                    style={[
+                      styles.fulfillmentButton, 
+                      fulfillmentAnswer === false && styles.selectedFulfillmentButton,
+                      styles.noButton
+                    ]}
+                    onPress={() => handleFulfillmentAnswer(false)}
+                  >
+                    <Text style={[
+                      styles.fulfillmentButtonText,
+                      fulfillmentAnswer === false && styles.selectedFulfillmentButtonText
+                    ]}>
+                      No, I didn't
+                    </Text>
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity
+                    style={[
+                      styles.fulfillmentButton, 
+                      fulfillmentAnswer === true && styles.selectedFulfillmentButton,
+                      styles.yesButton
+                    ]}
+                    onPress={() => handleFulfillmentAnswer(true)}
+                  >
+                    <Text style={[
+                      styles.fulfillmentButtonText,
+                      fulfillmentAnswer === true && styles.selectedFulfillmentButtonText
+                    ]}>
+                      Yes, I did!
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
 
+              {/* Reflection Section */}
               <View style={styles.reflectionSection}>
                 <Text style={[styles.reflectionLabel, isDarkMode && styles.darkText]}>
                   Reflection (Optional)
@@ -513,6 +542,7 @@ export const IntentionScreen: React.FC<IntentionScreenProps> = ({
                 />
               </View>
 
+              {/* Action Buttons */}
               {fulfillmentAnswer !== null ? (
                 <View style={styles.actionButtons}>
                   <Text style={[styles.actionQuestion, isDarkMode && styles.darkText]}>
@@ -530,13 +560,15 @@ export const IntentionScreen: React.FC<IntentionScreenProps> = ({
                     style={[styles.actionButton, styles.goBackButton]}
                     onPress={() => handleIntentionComplete('back_to_app')}
                   >
-                    <Text style={styles.actionButtonText}>📱 Go Back to {interruptedApp.appName}</Text>
+                    <Text style={styles.actionButtonText}>📱 Continue with {interruptedApp.appName}</Text>
                   </TouchableOpacity>
                 </View>
               ) : (
-                <Text style={[styles.debugText, isDarkMode && styles.darkText]}>
-                  Please answer whether you fulfilled your intention above ↑
-                </Text>
+                <View style={styles.promptSection}>
+                  <Text style={[styles.promptText, isDarkMode && styles.darkText]}>
+                    Please answer whether you fulfilled your intention above
+                  </Text>
+                </View>
               )}
             </ScrollView>
           </View>
@@ -742,35 +774,48 @@ const styles = StyleSheet.create({
    },
    modalContent: {
      backgroundColor: '#ffffff',
-     borderRadius: 16,
-     padding: 24,
+     borderRadius: 20,
+     padding: 0,
      width: '100%',
      maxWidth: 400,
      maxHeight: '90%',
      minHeight: 500,
+     overflow: 'hidden',
    },
    darkModalContent: {
      backgroundColor: '#f5f5f5',
+   },
+   modalHeader: {
+     backgroundColor: '#9ac790',
+     paddingTop: 24,
+     paddingBottom: 20,
+     paddingHorizontal: 24,
+     borderTopLeftRadius: 20,
+     borderTopRightRadius: 20,
+     alignItems: 'center',
    },
    modalTitle: {
      fontSize: 24,
      fontWeight: 'bold',
      textAlign: 'center',
-     marginBottom: 16,
-     color: '#333333',
+     marginBottom: 8,
+     color: '#FFFFFF',
    },
    modalSubtitle: {
      fontSize: 16,
      textAlign: 'center',
-     marginBottom: 20,
-     color: '#666666',
-     lineHeight: 22,
+     color: '#FFFFFF',
+     opacity: 0.9,
    },
    intentionReminder: {
-     backgroundColor: '#f0f8ff',
-     padding: 16,
-     borderRadius: 8,
-     marginBottom: 20,
+     backgroundColor: '#f0f9e6',
+     padding: 20,
+     borderRadius: 12,
+     marginHorizontal: 24,
+     marginTop: 24,
+     marginBottom: 24,
+     borderWidth: 1,
+     borderColor: '#e8f5e8',
    },
    intentionReminderLabel: {
      fontSize: 14,
@@ -784,6 +829,10 @@ const styles = StyleSheet.create({
      fontStyle: 'italic',
      lineHeight: 22,
    },
+   fulfillmentSection: {
+     paddingHorizontal: 24,
+     marginBottom: 24,
+   },
    questionText: {
      fontSize: 18,
      fontWeight: '600',
@@ -794,93 +843,108 @@ const styles = StyleSheet.create({
    fulfillmentButtons: {
      flexDirection: 'row',
      justifyContent: 'space-between',
-     marginBottom: 24,
      gap: 12,
    },
    fulfillmentButton: {
      flex: 1,
-     paddingVertical: 12,
+     paddingVertical: 14,
      paddingHorizontal: 16,
-     borderRadius: 8,
+     borderRadius: 10,
      alignItems: 'center',
+     borderWidth: 2,
+     borderColor: '#e0e0e0',
+     backgroundColor: '#f8f8f8',
    },
-   noButton: {
-     backgroundColor: '#FF5722',
-   },
-   yesButton: {
+   selectedFulfillmentButton: {
+     borderColor: '#9ac790',
      backgroundColor: '#9ac790',
    },
+   noButton: {
+     borderColor: '#FF5722',
+   },
+   yesButton: {
+     borderColor: '#4CAF50',
+   },
    fulfillmentButtonText: {
-     color: 'white',
+     color: '#666666',
      fontSize: 16,
      fontWeight: '600',
+   },
+   selectedFulfillmentButtonText: {
+     color: 'white',
    },
      reflectionSection: {
-    marginBottom: 8,
-  },
-   reflectionLabel: {
-     fontSize: 16,
-     fontWeight: '600',
-     marginBottom: 8,
-     color: '#333333',
-   },
-   reflectionSubtitle: {
-     fontSize: 14,
-     color: '#666666',
-     marginBottom: 12,
-   },
-   reflectionInput: {
-     borderWidth: 1,
-     borderColor: '#e0e0e0',
-     borderRadius: 8,
-     padding: 12,
-     fontSize: 16,
-     minHeight: 80,
-     backgroundColor: '#f0f9e6',
-     textAlignVertical: 'top',
-   },
-   darkReflectionInput: {
-     backgroundColor: '#ffffff',
-     borderColor: '#d0d0d0',
-   },
+       paddingHorizontal: 24,
+       marginBottom: 24,
+     },
+     reflectionLabel: {
+       fontSize: 16,
+       fontWeight: '600',
+       marginBottom: 8,
+       color: '#333333',
+     },
+     reflectionSubtitle: {
+       fontSize: 14,
+       color: '#666666',
+       marginBottom: 12,
+     },
+     reflectionInput: {
+       borderWidth: 1,
+       borderColor: '#e0e0e0',
+       borderRadius: 10,
+       padding: 16,
+       fontSize: 16,
+       minHeight: 80,
+       backgroundColor: '#f0f9e6',
+       textAlignVertical: 'top',
+     },
+     darkReflectionInput: {
+       backgroundColor: '#ffffff',
+       borderColor: '#d0d0d0',
+     },
      actionButtons: {
-    marginTop: 12,
-    paddingTop: 12,
-    borderTopWidth: 1,
-    borderTopColor: '#e0e0e0',
-  },
+       paddingHorizontal: 24,
+       paddingTop: 20,
+       borderTopWidth: 1,
+       borderTopColor: '#e0e0e0',
+       marginTop: 8,
+     },
      actionQuestion: {
-    fontSize: 16,
-    fontWeight: '600',
-    textAlign: 'center',
-    marginBottom: 12,
-    color: '#333333',
-  },
-   actionButton: {
-     paddingVertical: 14,
-     paddingHorizontal: 20,
-     borderRadius: 8,
-     alignItems: 'center',
-     marginBottom: 12,
-   },
-   goHomeButton: {
-     backgroundColor: '#FF5722',
-   },
-   goBackButton: {
-     backgroundColor: '#2196F3',
-   },
-   actionButtonText: {
-     color: 'white',
-     fontSize: 16,
-     fontWeight: '600',
-   },
-   debugText: {
-     fontSize: 14,
-     color: '#999999',
-     textAlign: 'center',
-     fontStyle: 'italic',
-     marginTop: 16,
-   },
+       fontSize: 16,
+       fontWeight: '600',
+       textAlign: 'center',
+       marginBottom: 16,
+       color: '#333333',
+     },
+     actionButton: {
+       paddingVertical: 16,
+       paddingHorizontal: 20,
+       borderRadius: 10,
+       alignItems: 'center',
+       marginBottom: 12,
+     },
+     goHomeButton: {
+       backgroundColor: '#9ac790',
+     },
+     goBackButton: {
+       backgroundColor: '#4CAF50',
+     },
+     actionButtonText: {
+       color: 'white',
+       fontSize: 16,
+       fontWeight: '600',
+     },
+     promptSection: {
+       paddingHorizontal: 24,
+       paddingVertical: 20,
+       alignItems: 'center',
+     },
+     promptText: {
+       fontSize: 14,
+       color: '#999999',
+       textAlign: 'center',
+       fontStyle: 'italic',
+     },
    modalScrollContent: {
      flexGrow: 1,
      paddingBottom: 20,
