@@ -174,13 +174,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     paddingTop: 40,
+    backgroundColor: '#aab6f3', // header color from HomeScreen
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
   },
   backButton: {
     padding: 10,
   },
   backButtonText: {
     fontSize: 16,
-    color: '#666666',
+    color: '#333',
     fontWeight: '600',
   },
   darkText: {
@@ -190,7 +193,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginLeft: 20,
-    color: '#333333',
+    color: '#ffffff',
   },
   content: {
     flex: 1,
@@ -211,7 +214,7 @@ const styles = StyleSheet.create({
   },
   progressBar: {
     height: 20,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: '#e0e0f0', // lighter lavender
     borderRadius: 10,
     overflow: 'hidden',
   },
@@ -226,7 +229,7 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   breathingButton: {
-    backgroundColor: '#999999',
+    backgroundColor: '#e6e6fa', // match pastel card background
     paddingVertical: 20,
     paddingHorizontal: 40,
     borderRadius: 50,
@@ -242,16 +245,16 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   breathingButtonActive: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#d1c4f6', // slightly darker lavender
   },
   inhaleButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#c8e6c9', // light green
   },
   exhaleButton: {
-    backgroundColor: '#FF9800',
+    backgroundColor: '#ffe0b2', // soft orange
   },
   breathingButtonText: {
-    color: 'white',
+    color: '#333333',
     fontSize: 18,
     fontWeight: '600',
   },
@@ -274,4 +277,4 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
   },
-}); 
+});
